@@ -47,4 +47,9 @@ test('Verify My Account and Register button', async ({ page }) => {
     page.getByRole('heading', { name: 'My Account' })
   ).toBeVisible();
   
+  // Verify login success
+  await expect(
+    page.getByRole('heading', { name: 'My Account' })
+  ).toBeVisible();
+  
 });
