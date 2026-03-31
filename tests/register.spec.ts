@@ -29,11 +29,11 @@ test('Verify My Account and Register button', async ({ page }) => {
     .getByRole('link', { name: 'Login' })
     .click();
 
-  // Enter login details
+  // Enter login detail
   await page.getByLabel('E-Mail Address').fill('vinoth123test@gmail.com');
   await page.getByLabel('Password').fill('Vinoth@3532');
 
-  // Click Login button
+  // Click Login buttons
   await page.getByRole('button', { name: 'Login' }).click();
 
   // Verify login success
@@ -41,4 +41,10 @@ test('Verify My Account and Register button', async ({ page }) => {
     page.getByRole('heading', { name: 'My Account' })
   ).toBeVisible();
 
+  
+  // Verify login success
+  await expect(
+    page.getByRole('heading', { name: 'My Account' })
+  ).toBeVisible();
+  
 });
