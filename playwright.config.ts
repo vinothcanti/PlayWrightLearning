@@ -39,7 +39,7 @@ export default defineConfig({
     }
   },
 
-  // Run only in Chrome
+  // Run only Chrome
   projects: [
     {
       name: 'chromium',
