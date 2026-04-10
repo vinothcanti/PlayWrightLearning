@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS-18'
-    }
-
     triggers {
         cron('H/30 * * * *')
     }
@@ -12,9 +8,19 @@ pipeline {
     environment {
         BRANCH_NAME = 'feature/login-automation'
         REPO_URL = 'https://github.com/vinothcanti/PlayWrightLearning.git'
+        PATH = "C:\\Program Files\\nodejs;${env.PATH}"
     }
 
     stages {
+
+        stage('Check Node & NPM') {
+            steps {
+                echo 'Checking Node.js installation...'
+                bat 'node -v'
+                bat 'npm -v'
+                bat 'npx playwright --version'
+            }
+        }
 
         stage('Checkout Code') {
             steps {
@@ -30,7 +36,7 @@ pipeline {
                 bat 'npm ci'
 
                 echo 'Installing Playwright browsers...'
-                bat 'npx playwright install --with-deps chromium'
+                bat 'npx playwright install chromium'
             }
         }
 
@@ -43,7 +49,7 @@ pipeline {
 
         stage('Publish HTML Report') {
             steps {
-                echo 'Generating report...'
+                echo 'Publishing Playwright HTML report...'
                 publishHTML([
                     allowMissing: true,
                     alwaysLinkToLastBuild: true,
@@ -66,7 +72,7 @@ pipeline {
 
         success {
             mail to: 'vinothcanti@gmail.com',
-                 subject: "✅ SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
 Playwright test execution PASSED successfully.
 
@@ -80,7 +86,7 @@ Please check HTML report in Jenkins.
 
         failure {
             mail to: 'vinothcanti@gmail.com',
-                 subject: "❌ FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
+                 subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: """
 Playwright test execution FAILED.
 
