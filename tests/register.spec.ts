@@ -1,55 +1,22 @@
-import { test, expect } from '@playwright/test';
+import { test } from '../fixtures/baseTest';
+import { RegisterPage } from '../pages/RegisterPage';
+import { userData } from '../utils/testData';
+import { generateUniqueEmail } from '../utils/dataGenerator';
 
-// Add this to maximize window
-test.use({
-  launchOptions: {
-    args: ['--start-maximized']
-  }
-});
+test('User registration', async ({ page }) => {
+  const registerPage = new RegisterPage(page);
 
-test('Verify My Account and Register button', async ({ page }) => {
-  await page.goto(
-    'https://tutorialsninja.com/demo/index.php?route=account/register',
-    { timeout: 60000, waitUntil: 'domcontentloaded' }
-    
+  const uniqueEmail = generateUniqueEmail();
+
+  await registerPage.open();
+
+  await registerPage.registerUser(
+    userData.firstName,
+    userData.lastName,
+    uniqueEmail,
+    userData.phone,
+    userData.password
   );
 
-  // Click header My Account only
-  await page.locator('header, nav').first()
-    .getByRole('link', { name: /My Account/i })
-    .click();
-
-  // Verify Register visible
-  await expect(
-    page.getByRole('link', { name: 'Register' }).first()
-  ).toBeVisible();
-
-   // Click Login from dropdown
-  await page.locator('#top-links')
-    .getByRole('link', { name: 'Login' })
-    .click();
-
-  // Enter login detail
-  await page.getByLabel('E-Mail Address').fill('vinoth123test@gmail.com');
-  await page.getByLabel('Password').fill('Vinoth@3532');
-
-  // Click Login buttons
-  await page.getByRole('button', { name: 'Login' }).click();
-
-  // Verify login success
-  await expect(
-    page.getByRole('heading', { name: 'My Account' })
-  ).toBeVisible();
-
-  
-  // Verify login success
-  await expect(
-    page.getByRole('heading', { name: 'My Account' })
-  ).toBeVisible();
-  
-  // Verify login success
-  await expect(
-    page.getByRole('heading', { name: 'My Account' })
-  ).toBeVisible();
-  
+  await registerPage.verifySuccess();
 });
