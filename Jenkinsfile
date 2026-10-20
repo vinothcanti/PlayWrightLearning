@@ -60,17 +60,30 @@ pipeline {
                 ])
             }
         }
-        stage('Verify AWS') {
+      stage('Verify AWS') {
     steps {
-        bat '"C:\\Program Files\\Amazon\\AWSCLIV2\\aws.exe" sts get-caller-identity'
+        withCredentials([[
+            $class: 'AmazonWebServicesCredentialsBinding',
+            credentialsId: 'aws-jenkins-credentials'
+        ]]) {
+
+            bat '"C:\\Program Files\\Amazon\\AWSCLIV2\\aws.exe" sts get-caller-identity'
+
+        }
     }
 }
 
 stage('Upload Report To S3') {
     steps {
-        bat '''
+        withCredentials([
+            [$class: 'AmazonWebServicesCredentialsBinding',
+             credentialsId: 'aws-jenkins-credentials']
+        ]) {
+
+           bat '''
         "C:\\Program Files\\Amazon\\AWSCLIV2\\aws.exe" s3 cp playwright-report/index.html s3://vinoth-playwright-report-2026/
         '''
+        }
     }
 }
     }
