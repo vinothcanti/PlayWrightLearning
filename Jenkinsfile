@@ -60,6 +60,16 @@ pipeline {
                 ])
             }
         }
+
+        stage('Upload Report To S3') {
+    steps {
+        echo 'Uploading Playwright report to S3...'
+
+        bat '''
+        aws s3 cp playwright-report/index.html s3://vinoth-playwright-report-2026/
+        '''
+    }
+}
     }
 
     post {
