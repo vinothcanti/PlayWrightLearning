@@ -61,12 +61,10 @@ pipeline {
             }
         }
 
-        stage('Upload Report To S3') {
+stage('Upload Report To S3') {
     steps {
-        echo 'Uploading Playwright report to S3...'
-
         bat '''
-        aws s3 cp playwright-report/index.html s3://vinoth-playwright-report-2026/
+        "C:\\Program Files\\Amazon\\AWSCLIV2\\aws.exe" s3 cp playwright-report/index.html s3://vinoth-playwright-report-2026/
         '''
     }
 }
