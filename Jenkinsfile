@@ -60,6 +60,11 @@ pipeline {
                 ])
             }
         }
+        stage('Verify AWS') {
+    steps {
+        bat '"C:\\Program Files\\Amazon\\AWSCLIV2\\aws.exe" sts get-caller-identity'
+    }
+}
 
 stage('Upload Report To S3') {
     steps {
